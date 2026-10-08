@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Irmak Köseoğlu — ML / AI Engineer</title>
+<meta name="description" content="Irmak Köseoğlu — Machine Learning & AI Engineer in Berlin. RAG systems, deep learning, MLOps.">
+<meta property="og:title" content="Irmak Köseoğlu — ML / AI Engineer">
+<meta property="og:description" content="RAG systems, deep learning and MLOps — AI that works in real products, not only in notebooks.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://irmakkoseoglu.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230b0d10'/><text x='5' y='23' font-family='monospace' font-size='18' fill='%237CFF9B'>&gt;_</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0d10; --bg2:#101318; --panel:#13171d; --line:#232a33;
+  --text:#d9e1ea; --dim:#7d8996; --faint:#4a5562;
+  --green:#7CFF9B; --pink:#FF6AD5; --cyan:#6AE4FF; --amber:#FFC86A;
+  --mono:'JetBrains Mono',ui-monospace,monospace; --display:'Unbounded',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;line-height:1.65;overflow-x:hidden}
+::selection{background:var(--pink);color:#000}
+a{color:inherit}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
+.grid-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:48px 48px;opacity:.25;mask-image:radial-gradient(ellipse at 50% 0%,#000 0%,transparent 70%)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* boot */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:100;padding:32px;font-size:13px;color:var(--green);transition:opacity .5s}
+#boot.done{opacity:0;pointer-events:none}
+#boot .skip{position:absolute;bottom:24px;right:32px;color:var(--faint);font-size:12px}
+#boot p{white-space:pre}
+#boot .ok{color:var(--green)} #boot .d{color:var(--dim)}
+
+/* nav */
+nav{position:sticky;top:0;z-index:40;background:rgba(11,13,16,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:58px}
+.logo{color:var(--green);text-decoration:none;font-weight:700;font-size:14px}
+.logo .cur{animation:blink 1s steps(1) infinite}
+.links{display:flex;gap:22px;align-items:center}
+.links a{text-decoration:none;color:var(--dim);font-size:13px;transition:color .2s}
+.links a:hover{color:var(--green)}
+.links a::before{content:"./";color:var(--faint)}
+@keyframes blink{50%{opacity:0}}
+
+/* hero */
+.hero{min-height:calc(100vh - 58px);display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;padding:56px 0}
+.badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(124,255,155,.3);background:rgba(124,255,155,.06);color:var(--green);padding:5px 12px;border-radius:99px;font-size:12px;margin-bottom:28px}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(44px,6.4vw,84px);line-height:.98;letter-spacing:-.03em}
+h1 .l2{color:transparent;-webkit-text-stroke:1.5px var(--text)}
+h1 .dot{color:var(--pink)}
+.role{margin:22px 0 14px;font-size:17px;color:var(--dim);min-height:28px}
+.role b{color:var(--cyan);font-weight:500}
+.role .caret{display:inline-block;width:9px;height:18px;background:var(--cyan);vertical-align:-3px;margin-left:2px;animation:blink 1s steps(1) infinite}
+.lead{color:var(--dim);max-width:500px;margin-bottom:30px}
+.lead em{color:var(--text);font-style:normal;border-bottom:1px dashed var(--pink)}
+.ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13px;padding:12px 20px;border-radius:8px;text-decoration:none;border:1px solid var(--line);color:var(--text);background:var(--panel);cursor:pointer;transition:transform .15s,border-color .2s,background .2s}
+.btn:hover{transform:translateY(-2px);border-color:var(--dim)}
+.btn.main{background:var(--green);color:#06210f;border-color:var(--green);font-weight:700}
+.btn.main:hover{box-shadow:0 0 0 4px rgba(124,255,155,.15)}
+.socials{display:flex;gap:10px;margin-top:28px;font-size:13px;flex-wrap:wrap}
+.socials a{color:var(--dim);text-decoration:none}
+.socials a:hover{color:var(--pink)}
+.si{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--panel);transition:border-color .2s,color .2s,transform .15s}
+.si:hover{border-color:var(--pink);transform:translateY(-2px)}
+.si svg{width:16px;height:16px;flex:none}
+.links a.cvl{color:var(--green);border:1px solid rgba(124,255,155,.35);border-radius:6px;padding:3px 10px}
+.links a.cvl::before{content:none}
+
+/* terminal */
+.term{background:#0d1014;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(124,255,155,.18),0 0 0 1px rgba(255,255,255,.02)}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--bg2)}
+.term-bar i{width:11px;height:11px;border-radius:50%}
+.term-bar span{margin-left:auto;margin-right:auto;font-size:12px;color:var(--faint)}
+#out{height:360px;overflow-y:auto;padding:16px 18px;font-size:13.5px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+#out .ln{white-space:pre-wrap;word-break:break-word}
+.pr{color:var(--green)} .pth{color:var(--cyan)} .muted{color:var(--dim)} .pk{color:var(--pink)} .am{color:var(--amber)}
+#out a{color:var(--cyan)}
+.cmdline{display:flex;gap:8px;padding:0 18px 16px;font-size:13.5px}
+#cmd{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:13.5px;caret-color:var(--green)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 16px}
+.chips button{font-family:var(--mono);font-size:11.5px;background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:3px 9px;cursor:pointer}
+.chips button:hover{color:var(--green);border-color:var(--green)}
+
+/* sections */
+section{padding:96px 0;border-top:1px solid var(--line)}
+.kicker{color:var(--pink);font-size:13px;margin-bottom:10px}
+h2{font-family:var(--display);font-weight:600;font-size:clamp(28px,3.6vw,42px);letter-spacing:-.02em;line-height:1.1;margin-bottom:14px}
+.sub{color:var(--dim);max-width:560px;margin-bottom:44px}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+
+/* about */
+.about{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start}
+.about p{color:var(--dim);margin-bottom:16px}
+.about p strong{color:var(--text);font-weight:500}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:18px}
+.stat .n{font-family:var(--display);font-size:30px;font-weight:600;color:var(--green)}
+.stat .t{font-size:12px;color:var(--dim)}
+.langs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.langs span{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:4px 10px;color:var(--dim)}
+.langs b{color:var(--text);font-weight:500}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:0;overflow:hidden;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--c,var(--green))}
+.card.wide{grid-column:span 2}
+.card-top{display:flex;justify-content:space-between;align-items:center;padding:11px 18px;border-bottom:1px solid var(--line);font-size:12px;color:var(--faint);background:var(--bg2)}
+.card-top .f{color:var(--c,var(--green))}
+.live{color:#06210f;background:var(--green);font-weight:700;border-radius:4px;padding:1px 7px;font-size:11px}
+.card-body{padding:22px 18px 20px}
+.card h3{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.01em;margin-bottom:4px}
+.card .kind{font-size:12px;color:var(--c,var(--green));margin-bottom:14px}
+.card ul{list-style:none;color:var(--dim);font-size:14px;margin-bottom:18px}
+.card li{padding-left:18px;position:relative;margin-bottom:6px}
+.card li::before{content:"→";position:absolute;left:0;color:var(--faint)}
+.card li b{color:var(--text);font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-size:11.5px;border:1px solid var(--line);border-radius:5px;padding:2px 8px;color:var(--dim)}
+.metric{position:absolute;right:18px;top:52px;font-family:var(--display);font-size:42px;font-weight:800;color:var(--c,var(--green));opacity:.12;pointer-events:none}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.sk{border:1px solid var(--line);border-radius:10px;padding:18px;background:var(--panel)}
+.sk .h{font-size:12.5px;color:var(--dim);margin-bottom:12px}
+.sk .h span{color:var(--green)}
+.sk .items{display:flex;flex-wrap:wrap;gap:7px}
+.sk .items span{font-size:13px;padding:5px 11px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);transition:all .2s;cursor:default}
+.sk .items span:hover{border-color:var(--pink);color:var(--pink);transform:rotate(-2deg) scale(1.05)}
+
+/* timeline */
+.tl{position:relative;padding-left:28px}
+.tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:linear-gradient(var(--green),var(--pink),var(--cyan))}
+.ti{position:relative;margin-bottom:34px}
+.ti::before{content:"";position:absolute;left:-27px;top:6px;width:13px;height:13px;border-radius:50%;background:var(--bg);border:2px solid var(--c,var(--green))}
+.ti .when{font-size:12px;color:var(--c,var(--green))}
+.ti h3{font-family:var(--display);font-weight:600;font-size:18px;margin:2px 0}
+.ti .where{color:var(--dim);font-size:13.5px;margin-bottom:6px}
+.ti p{color:var(--dim);font-size:14px;max-width:640px}
+
+/* writing */
+.post{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:26px;text-decoration:none;transition:border-color .25s,transform .25s}
+.post:hover{border-color:var(--amber);transform:translateY(-3px)}
+.post .meta{font-size:12px;color:var(--amber);margin-bottom:8px}
+.post h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.01em;margin-bottom:8px}
+.post p{color:var(--dim);font-size:14px}
+.post .arrow{font-size:28px;color:var(--amber);transition:transform .25s}
+.post:hover .arrow{transform:translate(4px,-4px)}
+
+/* game */
+.game{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center}
+.board{display:grid;grid-template-columns:repeat(3,96px);grid-template-rows:repeat(3,96px);gap:8px}
+.board button{background:var(--panel);border:1px solid var(--line);border-radius:10px;font-family:var(--display);font-size:40px;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s;color:var(--text)}
+.board button:hover:not(:disabled){border-color:var(--green);background:var(--bg2)}
+.board button.x{color:var(--green)} .board button.o{color:var(--pink)}
+.board button.win{background:rgba(255,106,213,.1);border-color:var(--pink)}
+.board button:disabled{cursor:default}
+.gstat{font-size:14px;color:var(--dim);margin:18px 0}
+.gstat b{color:var(--text);font-weight:500}
+.score{display:flex;gap:18px;font-size:13px;color:var(--dim);margin-bottom:18px}
+.score span b{font-weight:700}
+.log{font-size:12.5px;color:var(--faint);border-left:2px solid var(--line);padding-left:12px;min-height:40px}
+
+/* contact */
+.contact{text-align:center;padding:120px 0}
+.contact h2{font-size:clamp(34px,5.4vw,68px)}
+.contact h2 span{color:var(--green)}
+.mail{display:inline-block;margin:26px 0 30px;font-size:clamp(15px,2.2vw,22px);color:var(--text);text-decoration:none;border-bottom:2px solid var(--pink);padding-bottom:4px;cursor:pointer}
+.mail:hover{color:var(--pink)}
+.copied{display:block;font-size:12px;color:var(--green);height:16px;margin-top:-22px;margin-bottom:12px}
+footer{border-top:1px solid var(--line);padding:24px 0;font-size:12px;color:var(--faint)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .hero,.about,.game{grid-template-columns:1fr}
+  .hero{padding:40px 0 64px;gap:36px;min-height:auto}
+  .projects{grid-template-columns:1fr}
+  .card.wide{grid-column:auto}
+  .board{grid-template-columns:repeat(3,84px);grid-template-rows:repeat(3,84px);justify-content:center}
+  .links{display:none}
+}
+@media (max-width:560px){
+  .wrap{padding:0 16px}
+  section{padding:72px 0}
+  #out{height:300px;font-size:12.5px}
+  .post{grid-template-columns:1fr}
+  .post .arrow{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div id="boot" aria-hidden="true"><div id="bootlines"></div><div class="skip">press any key to skip</div></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top">~/irmak<span class="cur">_</span></a>
+    <div class="links">
+      <a href="#about">about</a><a href="#projects">projects</a><a href="#skills">skills</a><a href="#journey">journey</a><a href="#writing">writing</a><a href="#play">play</a><a href="#contact">contact</a><a class="cvl" href="/cv.pdf" target="_blank" rel="noopener">cv ↗</a>
+    </div>
+  </div>
+</nav>
+
+<main id="top" class="wrap">
+  <div class="hero">
+    <div>
+      <div class="badge"><i></i>open to ML / AI roles · Berlin</div>
+      <h1>Irmak<br><span class="l2">Köseoğlu</span><span class="dot">.</span></h1>
+      <div class="role">&gt; <b id="typed"></b><span class="caret"></span></div>
+      <p class="lead">M.Sc. Big Data &amp; AI student building RAG systems, deep learning models and the pipelines that ship them. I like AI that <em>works in real products</em>, not only in notebooks.</p>
+      <div class="ctas">
+        <a class="btn main" href="#projects">view projects</a>
+        <a class="btn" href="/cv.pdf" target="_blank" rel="noopener">view my CV ↗</a>
+        <a class="btn" href="#play">try to beat my AI ♟</a>
+      </div>
+      <div class="socials">
+        <a class="si" href="https://github.com/irmakkoseoglu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg><span>github</span></a>
+        <a class="si" href="https://linkedin.com/in/irmakkoseoglu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg><span>linkedin</span></a>
+        <a class="si" href="/cv.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></svg><span>cv</span></a>
+      </div>
+    </div>
+
+    <div class="term" id="term">
+      <div class="term-bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>irmak@berlin: ~</span></div>
+      <div id="out" aria-live="polite"></div>
+      <div class="cmdline"><span><span class="pr">irmak</span><span class="muted">@</span><span class="pth">berlin</span><span class="muted">:~$</span></span><input id="cmd" autocomplete="off" spellcheck="false" aria-label="terminal command"></div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+</main>
+
+<section id="about">
+  <div class="wrap about reveal">
+    <div>
+      <div class="kicker">// 01 · about</div>
+      <h2>Math brain,<br>engineer hands.</h2>
+      <p>I studied <strong>Mathematics Engineering at ITU</strong>, and now I'm doing my <strong>M.Sc. in Big Data &amp; Artificial Intelligence</strong> at SRH Berlin, focusing on Generative AI and Machine Learning.</p>
+      <p>I build things end to end: from <strong>RAG pipelines</strong> and <strong>fine-tuned vision models</strong> to the FastAPI services, Docker images and CI/CD that keep them running. Before Berlin, I worked as an analyst at <strong>KPMG Turkey</strong>, explaining tech results to both engineers and non-technical people.</p>
+      <p>I still love the math under the hood — optimization and game theory especially.</p>
+      <div class="langs"><span><b>TR</b> native</span><span><b>EN</b> fluent</span><span><b>DE</b> B1</span></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n" data-count="5">0</div><div class="t">ML projects shipped</div></div>
+      <div class="stat"><div class="n" data-count="38">0</div><div class="t">plant diseases classified</div></div>
+      <div class="stat"><div class="n" data-count="96">0</div><div class="t">ML pipelines benchmarked</div></div>
+      <div class="stat"><div class="n" data-count="72" data-suffix="k">0</div><div class="t">news articles classified</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// 02 · projects</div>
+      <h2>Things I've built.</h2>
+      <p class="sub">From retrieval pipelines to deployed vision models — each one tested, containerized and shipped.</p>
+    </div>
+    <div class="projects">
+      <article class="card wide reveal" style="--c:var(--green)">
+        <div class="card-top"><span class="f">rag_pdf_qa/</span><span class="live">● LIVE</span></div>
+        <div class="card-body">
+          <div class="metric">RAG</div>
+          <h3>PDF Question Answering API</h3>
+          <div class="kind">retrieval-augmented generation pipeline</div>
+          <ul>
+            <li>Ask questions about any PDF: <b>chunking → embeddings → ChromaDB retrieval → LLM answer</b>.</li>
+            <li>Packaged as a <b>FastAPI service</b> with automated tests and a CI/CD pipeline; running in production.</li>
+          </ul>
+          <div class="tags"><span>Python</span><span>FastAPI</span><span>LangChain</span><span>ChromaDB</span><span>Docker</span><span>GitHub Actions</span></div>
+        </div>
+      </article>
+      <article class="card reveal" style="--c:var(--pink)">
+        <div class="card-top"><span class="f">llm_leakage_bench/</span><span>research</span></div>
+        <div class="card-body">
+          <div class="metric">96</div>
+          <h3>LLM Data Leakage Detection</h3>
+          <div class="kind">benchmarking &amp; evaluation</div>
+          <ul>
+            <li>Can an LLM spot data leakage in ML pipelines? Compared prompting strategies against a rule-based baseline on <b>96 pipelines</b>.</li>
+            <li><b>Chain-of-thought</b> won — and was the only method that caught a hard-to-find leakage type.</li>
+          </ul>
+          <div class="tags"><span>Python</span><span>OpenAI API</span><span>scikit-learn</span></div>
+        </div>
+      </article>
+      <article class="card reveal" style="--c:var(--cyan)">
+        <div class="card-top"><span class="f">plant_disease_cv/</span><span>vision</span></div>
+        <div class="card-body">
+          <div class="metric">38</div>
+          <h3>Plant Disease Classification</h3>
+          <div class="kind">CNN vs. transfer learning</div>
+          <ul>
+            <li><b>ResNet50</b> with transfer learning classifies <b>38 plant diseases</b> from leaf images — clearly beating a CNN trained from scratch.</li>
+            <li><b>Grad-CAM</b> to check the model looks at the right part of the leaf before trusting it.</li>
+          </ul>
+          <div class="tags"><span>PyTorch</span><span>ResNet50</span><span>Grad-CAM</span><span>FastAPI</span><span>Docker</span></div>
+        </div>
+      </article>
+      <article class="card reveal" style="--c:var(--amber)">
+        <div class="card-top"><span class="f">plant_inference_api/</span><span>mlops</span></div>
+        <div class="card-body">
+          <div class="metric">API</div>
+          <h3>Plant Disease Inference API</h3>
+          <div class="kind">MLOps deployment</div>
+          <ul>
+            <li>Turned the model into a <b>live REST API</b> returning top predictions with confidence scores.</li>
+            <li>CI/CD runs tests and builds the Docker image on every push — <b>broken code never reaches deployment</b>.</li>
+          </ul>
+          <div class="tags"><span>FastAPI</span><span>Docker</span><span>GitHub Actions</span><span>pytest</span><span>PyTorch</span></div>
+        </div>
+      </article>
+      <article class="card reveal" style="--c:var(--green)">
+        <div class="card-top"><span class="f">fake_news_clf/</span><span>nlp</span></div>
+        <div class="card-body">
+          <div class="metric">72k</div>
+          <h3>Fake News Detection</h3>
+          <div class="kind">text classification</div>
+          <ul>
+            <li>Classifies <b>72,000 news articles</b> as real or fake.</li>
+            <li>Feature engineering + <b>GridSearchCV</b> to pick the best-performing model.</li>
+          </ul>
+          <div class="tags"><span>Python</span><span>scikit-learn</span><span>NLP</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// 03 · skills</div>
+      <h2>$ ls ~/toolbox</h2>
+      <p class="sub">What I reach for, grouped by where it lives in the stack.</p>
+    </div>
+    <div class="skills reveal">
+      <div class="sk"><div class="h"><span>drwx</span> llm_genai/</div><div class="items"><span>LangChain</span><span>RAG</span><span>FAISS</span><span>ChromaDB</span><span>Prompt Engineering</span><span>Claude API</span><span>OpenAI API</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> machine_learning/</div><div class="items"><span>PyTorch</span><span>scikit-learn</span><span>TensorFlow / Keras</span><span>Hugging Face</span><span>OpenCV</span><span>ONNX</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> cloud_devops/</div><div class="items"><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Azure</span><span>GitHub Actions</span><span>FastAPI</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> languages/</div><div class="items"><span>Python</span><span>C++</span><span>SQL</span><span>R</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> data_viz/</div><div class="items"><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Jupyter</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// 04 · journey</div>
+      <h2>git log --graph</h2>
+      <p class="sub">Istanbul → Berlin, math → machine learning.</p>
+    </div>
+    <div class="tl reveal">
+      <div class="ti" style="--c:var(--green)"><div class="when">Oct 2025 — Mar 2027 (expected)</div><h3>M.Sc. Big Data &amp; Artificial Intelligence</h3><div class="where">SRH University of Applied Sciences · Berlin</div><p>Focus on Generative AI, deep learning and deploying ML systems.</p></div>
+      <div class="ti" style="--c:var(--pink)"><div class="when">Oct 2024 — Jun 2025</div><h3>Analyst, Digital Finance &amp; Fintech</h3><div class="where">KPMG Turkey · Istanbul</div><p>Supported client projects on data and technology with cross-functional teams, reporting results to technical and non-technical stakeholders.</p></div>
+      <div class="ti" style="--c:var(--cyan)"><div class="when">Sep 2019 — Jun 2024</div><h3>B.Sc. Mathematics Engineering</h3><div class="where">Istanbul Technical University (ITU)</div><p>Where the love for optimization, probability and proofs began.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="writing">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">// 05 · writing</div>
+      <h2>Notes &amp; essays.</h2>
+      <p class="sub">I write about the math behind AI.</p>
+    </div>
+    <a class="post reveal" href="https://medium.com/@rmakoseoglu/the-minimax-theorem-optimization-meets-game-theory-4cc2f37e2e00" target="_blank" rel="noopener">
+      <div>
+        <div class="meta">Medium · Jun 2025 · 5 min read · game theory</div>
+        <h3>The Minimax Theorem: Optimization Meets Game Theory</h3>
+        <p>How the minimax theorem helps AI make safe decisions under uncertainty and competition — from saddle points and mixed strategies to poker bots and fraud detection.</p>
+      </div>
+      <div class="arrow">↗</div>
+    </a>
+  </div>
+</section>
+
+<section id="play">
+  <div class="wrap game">
+    <div class="reveal">
+      <div class="board" id="board"></div>
+    </div>
+    <div class="reveal">
+      <div class="kicker">// 06 · play</div>
+      <h2>Beat the minimax.</h2>
+      <p class="sub" style="margin-bottom:0">My article, but playable. You're <span class="pr">X</span>, the AI is <span class="pk">O</span> — it searches every possible future and picks the move with the best worst case. Spoiler: the best you can do is a draw.</p>
+      <div class="gstat" id="gstat">your move.</div>
+      <div class="score"><span>you <b class="pr" id="sx">0</b></span><span>draws <b class="am" id="sd">0</b></span><span>minimax <b class="pk" id="so">0</b></span></div>
+      <div class="log" id="glog">positions evaluated: —</div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="reset">↻ new game</button>
+        <button class="btn" id="first">let AI start</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap reveal">
+    <div class="kicker">// 07 · contact</div>
+    <h2>Let's build<br>something <span>useful.</span></h2>
+    <a class="mail" id="mail" href="mailto:irmakkoseoglu01@gmail.com">irmakkoseoglu01@gmail.com</a>
+    <span class="copied" id="copied"></span>
+    <div class="socials" style="justify-content:center;margin-top:0">
+      <a class="si" href="https://github.com/irmakkoseoglu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8 0 3.2.9.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.2.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg><span>github</span></a>
+        <a class="si" href="https://linkedin.com/in/irmakkoseoglu" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg><span>linkedin</span></a>
+        <a class="si" href="/cv.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h5"/></svg><span>cv</span></a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>© 2026 Irmak Köseoğlu · Berlin</span><span>built with plain html/css/js · <span class="pr">exit 0</span></span></div></footer>
+
+<script>
+const $ = s => document.querySelector(s);
+
+/* ---------- boot ---------- */
+(function(){
+  const boot = $('#boot'), box = $('#bootlines');
+  let seen = false; try { seen = sessionStorage.getItem('booted'); } catch(e){}
+  if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { boot.remove(); return; }
+  const lines = [
+    ['[ <span class="ok">OK</span> ] loading kernel: irmak-os 2.0.26', 120],
+    ['[ <span class="ok">OK</span> ] mounting /math  (ITU, 2019–2024)', 140],
+    ['[ <span class="ok">OK</span> ] importing torch, langchain, fastapi', 160],
+    ['[ <span class="ok">OK</span> ] connecting vector store … chromadb ready', 160],
+    ['[ <span class="ok">OK</span> ] running minimax search … opponent contained', 180],
+    ['<span class="d">welcome. starting interface…</span>', 300]
+  ];
+  let i = 0, t;
+  const end = () => { clearTimeout(t); boot.classList.add('done'); try{sessionStorage.setItem('booted','1')}catch(e){} setTimeout(()=>boot.remove(),600); };
+  const next = () => { if (i >= lines.length) return end(); const p = document.createElement('p'); p.innerHTML = lines[i][0]; box.appendChild(p); t = setTimeout(next, lines[i++][1]); };
+  next();
+  addEventListener('keydown', end, {once:true}); boot.addEventListener('click', end);
+})();
+
+/* ---------- typed roles ---------- */
+(function(){
+  const roles = ['ML / AI Engineer','RAG pipeline builder','PyTorch enjoyer','MLOps tinkerer','math engineer @ heart'];
+  const el = $('#typed'); let r = 0, c = 0, del = false;
+  (function tick(){
+    const w = roles[r];
+    el.textContent = w.slice(0, c);
+    if (!del && c === w.length) { del = true; return setTimeout(tick, 1600); }
+    if (del && c === 0) { del = false; r = (r+1) % roles.length; }
+    c += del ? -1 : 1;
+    setTimeout(tick, del ? 35 : 70);
+  })();
+})();
+
+/* ---------- terminal ---------- */
+const out = $('#out'), cmd = $('#cmd');
+const print = (html, cls='') => { const d = document.createElement('div'); d.className = 'ln ' + cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; };
+const C = {
+  help: () => `available commands:
+  <span class="pr">whoami</span>     who is this?
+  <span class="pr">projects</span>   things i've built
+  <span class="pr">skills</span>     my toolbox
+  <span class="pr">education</span>  where i studied
+  <span class="pr">blog</span>       my writing
+  <span class="pr">cv</span>         open my CV
+  <span class="pr">contact</span>    say hi
+  <span class="pr">play</span>       beat my minimax AI (you can't)
+  <span class="pr">sudo hire irmak</span>
+  <span class="pr">clear</span>      clean the screen`,
+  whoami: () => `<span class="pk">irmak köseoğlu</span> — ML / AI engineer
+M.Sc. Big Data &amp; AI @ SRH Berlin · B.Sc. Math Eng @ ITU
+builds RAG systems, deep learning models &amp; the pipelines that ship them.`,
+  projects: () => `<span class="am">drwxr-xr-x</span>  rag_pdf_qa/            <span class="pr">● live</span>  PDF question answering (RAG)
+<span class="am">drwxr-xr-x</span>  llm_leakage_bench/     LLMs detecting data leakage, 96 pipelines
+<span class="am">drwxr-xr-x</span>  plant_disease_cv/      ResNet50 · 38 classes · Grad-CAM
+<span class="am">drwxr-xr-x</span>  plant_inference_api/   FastAPI + Docker + CI/CD
+<span class="am">drwxr-xr-x</span>  fake_news_clf/         72k articles · scikit-learn
+<span class="muted">→ scroll to <a href="#projects">#projects</a> for details</span>`,
+  ls: () => C.projects(),
+  skills: () => `<span class="pth">llm/genai</span>  langchain rag faiss chromadb claude openai
+<span class="pth">ml</span>         pytorch sklearn tensorflow huggingface opencv onnx
+<span class="pth">devops</span>     docker kubernetes aws azure github-actions
+<span class="pth">langs</span>      python c++ sql r`,
+  education: () => `2025–2027  M.Sc. Big Data &amp; AI · SRH Berlin
+2019–2024  B.Sc. Mathematics Engineering · ITU
+2024–2025  Analyst · KPMG Turkey`,
+  blog: () => `📝 <a href="https://medium.com/@rmakoseoglu/the-minimax-theorem-optimization-meets-game-theory-4cc2f37e2e00" target="_blank" rel="noopener">The Minimax Theorem: Optimization Meets Game Theory</a>
+<span class="muted">   5 min read · type "play" to try it live</span>`,
+  contact: () => `email     <a href="mailto:irmakkoseoglu01@gmail.com">irmakkoseoglu01@gmail.com</a>
+github    <a href="https://github.com/irmakkoseoglu" target="_blank" rel="noopener">github.com/irmakkoseoglu</a>
+linkedin  <a href="https://linkedin.com/in/irmakkoseoglu" target="_blank" rel="noopener">linkedin.com/in/irmakkoseoglu</a>
+cv        <a href="/cv.pdf" target="_blank" rel="noopener">irmakkoseoglu.com/cv.pdf</a>`,
+  play: () => { setTimeout(()=>$('#play').scrollIntoView({behavior:'smooth'}), 400); return `<span class="pk">launching minimax.exe …</span> good luck. you'll need it.`; },
+  'sudo hire irmak': () => `<span class="pr">[sudo] password accepted.</span>
+permission granted ✓  opening mail client…
+<span class="muted">(seriously though — irmakkoseoglu01@gmail.com)</span>`,
+  sudo: () => `usage: sudo hire irmak`,
+  cv: () => { setTimeout(()=>window.open('/cv.pdf','_blank'), 300); return `opening <a href="/cv.pdf" target="_blank" rel="noopener">cv.pdf</a> … <span class="muted">(allow pop-ups if nothing happens)</span>`; },
+  date: () => new Date().toString(),
+  pwd: () => '/home/irmak/berlin',
+  coffee: () => `☕ brewing… ████████ 100%  · model accuracy +2%`,
+  'rm -rf /': () => `<span class="pk">nice try.</span> 🙂`,
+  exit: () => `there is no escape. try <span class="pr">help</span>.`,
+  hello: () => `hey! 👋 type <span class="pr">help</span> to look around.`
+};
+C.hi = C.hello; C.about = C.whoami; C.resume = () => C.cv();
+function run(raw){
+  const v = raw.trim(); const k = v.toLowerCase();
+  print(`<span class="pr">irmak</span><span class="muted">@</span><span class="pth">berlin</span><span class="muted">:~$</span> ${v.replace(/</g,'&lt;')}`);
+  if (!k) return;
+  if (k === 'clear') { out.innerHTML = ''; return; }
+  const f = C[k];
+  if (f) { print(f()); if (k === 'sudo hire irmak') setTimeout(()=>location.href='mailto:irmakkoseoglu01@gmail.com?subject=Let%27s%20talk',900); }
+  else print(`command not found: ${k.replace(/</g,'&lt;')} <span class="muted">— try "help"</span>`);
+}
+const hist = []; let hi = 0;
+cmd.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { hist.push(cmd.value); hi = hist.length; run(cmd.value); cmd.value=''; }
+  else if (e.key === 'ArrowUp') { if (hi>0) cmd.value = hist[--hi]; e.preventDefault(); }
+  else if (e.key === 'ArrowDown') { cmd.value = hi < hist.length-1 ? hist[++hi] : (hi = hist.length, ''); }
+  else if (e.key === 'Tab') { e.preventDefault(); const m = Object.keys(C).find(x => x.startsWith(cmd.value.toLowerCase()) && cmd.value); if (m) cmd.value = m; }
+});
+$('#term').addEventListener('click', e => { if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !getSelection().toString()) cmd.focus({preventScroll:true}); });
+['whoami','projects','cv','skills','play','sudo hire irmak'].forEach(c => {
+  const b = document.createElement('button'); b.textContent = c; b.onclick = () => run(c); $('#chips').appendChild(b);
+});
+print(`<span class="muted">irmak-os 2.0.26 · last login: today from berlin</span>`);
+print(`type <span class="pr">help</span> or click a command below 👇`);
+setTimeout(()=>run('whoami'), 900);
+
+/* ---------- reveal + counters ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('in');
+  e.target.querySelectorAll('[data-count]').forEach(n => {
+    const to = +n.dataset.count, suf = n.dataset.suffix || ''; let s = null;
+    const step = t => { s ??= t; const p = Math.min((t - s)/1100, 1); n.textContent = Math.round(to * (1 - Math.pow(1-p,3))) + suf; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+  io.unobserve(e.target);
+}), {threshold:.15});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ---------- copy email ---------- */
+$('#mail').addEventListener('click', e => {
+  if (navigator.clipboard) { navigator.clipboard.writeText('irmakkoseoglu01@gmail.com').then(()=>{ $('#copied').textContent = '✓ copied to clipboard'; setTimeout(()=>$('#copied').textContent='',2000); }).catch(()=>{}); }
+});
+
+/* ---------- minimax tic-tac-toe ---------- */
+(function(){
+  const L = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const boardEl = $('#board'), st = $('#gstat'), lg = $('#glog');
+  let b, over, nodes, score = {X:0,O:0,D:0};
+  const cells = [...Array(9)].map((_,i) => { const c = document.createElement('button'); c.setAttribute('aria-label','cell '+(i+1)); c.onclick = () => human(i); boardEl.appendChild(c); return c; });
+  const winner = s => { for (const l of L) if (s[l[0]] && s[l[0]]===s[l[1]] && s[l[1]]===s[l[2]]) return {p:s[l[0]], l}; return s.every(Boolean) ? {p:'D'} : null; };
+  function mm(s, isO, depth){
+    nodes++;
+    const w = winner(s);
+    if (w) return w.p==='O' ? 10-depth : w.p==='X' ? depth-10 : 0;
+    let best = isO ? -Infinity : Infinity;
+    for (let i=0;i<9;i++) if (!s[i]) { s[i] = isO?'O':'X'; const v = mm(s,!isO,depth+1); s[i]=null; best = isO ? Math.max(best,v) : Math.min(best,v); }
+    return best;
+  }
+  function draw(){ cells.forEach((c,i)=>{ c.textContent = b[i]||''; c.className = b[i] ? b[i].toLowerCase() : ''; c.disabled = over || !!b[i]; }); }
+  function finish(w){
+    over = true;
+    if (w.l) w.l.forEach(i => cells[i].classList.add('win'));
+    score[w.p]++; $('#sx').textContent = score.X; $('#so').textContent = score.O; $('#sd').textContent = score.D;
+    st.innerHTML = w.p==='O' ? '<b class="pk">minimax wins.</b> it saw that coming 6 moves ago.' : w.p==='X' ? '<b class="pr">you won?!</b> please email me how. seriously.' : '<b class="am">draw.</b> that\'s the saddle point — the best either of us can do.';
+    draw();
+  }
+  function ai(){
+    nodes = 0; let best = -Infinity, mv = -1;
+    const empty = b.filter(x=>!x).length;
+    if (empty === 9) { mv = [0,2,4,6,8][Math.floor(Math.random()*5)]; }
+    else for (let i=0;i<9;i++) if (!b[i]) { b[i]='O'; const v = mm(b,false,0); b[i]=null; if (v>best){best=v;mv=i;} }
+    b[mv] = 'O';
+    lg.innerHTML = `positions evaluated: <span class="pk">${nodes.toLocaleString()}</span> · chose cell ${mv+1}` + (best>0?' · <span class="pk">forced win found</span>':'');
+    const w = winner(b); if (w) return finish(w);
+    st.textContent = 'your move.'; draw();
+  }
+  function human(i){
+    if (over || b[i]) return;
+    b[i] = 'X'; draw();
+    const w = winner(b); if (w) return finish(w);
+    st.textContent = 'minimax is thinking…'; cells.forEach(c=>c.disabled=true);
+    setTimeout(ai, 380);
+  }
+  function reset(aiFirst){ b = Array(9).fill(null); over = false; lg.textContent = 'positions evaluated: —'; st.textContent = 'your move.'; draw(); if (aiFirst){ st.textContent='minimax is thinking…'; setTimeout(ai,300);} }
+  $('#reset').onclick = () => reset(false);
+  $('#first').onclick = () => reset(true);
+  reset(false);
+})();
+</script>
+<!-- Vercel Web Analytics: after clicking "Enable" in Vercel → Analytics, replace the src below with the exact script line Vercel shows you -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

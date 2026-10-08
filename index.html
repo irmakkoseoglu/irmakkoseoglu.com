@@ -30,6 +30,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
 .grid-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
   background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
   background-size:48px 48px;opacity:.25;mask-image:radial-gradient(ellipse at 50% 0%,#000 0%,transparent 70%)}
+#net{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+#glow{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(124,255,155,.09) 0%,rgba(106,228,255,.04) 35%,transparent 70%);opacity:0;transition:opacity .4s;will-change:transform}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 
 /* boot */
@@ -204,6 +207,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </head>
 <body>
 <div class="grid-bg"></div>
+<canvas id="net" aria-hidden="true"></canvas>
+<div id="glow" aria-hidden="true"></div>
 
 <div id="boot" aria-hidden="true"><div id="bootlines"></div><div class="skip">press any key to skip</div></div>
 
@@ -251,7 +256,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       <h2>Math brain,<br>engineer hands.</h2>
       <p>I studied <strong>Mathematics Engineering at ITU</strong>, and now I'm doing my <strong>M.Sc. in Big Data &amp; Artificial Intelligence</strong> at SRH Berlin, focusing on Generative AI and Machine Learning.</p>
       <p>I build things end to end: from <strong>RAG pipelines</strong> and <strong>fine-tuned vision models</strong> to the FastAPI services, Docker images and CI/CD that keep them running. Before Berlin, I worked as an analyst at <strong>KPMG Turkey</strong>, explaining tech results to both engineers and non-technical people.</p>
-      <p>I still love the math under the hood — optimization and game theory especially.</p>
+      <p>And yes — I still love the math under the hood.</p>
       <div class="langs"><span><b>TR</b> native</span><span><b>EN</b> fluent</span><span><b>DE</b> B1</span></div>
     </div>
     <div class="stats">
@@ -348,8 +353,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       <p class="sub">What I reach for, grouped by where it lives in the stack.</p>
     </div>
     <div class="skills reveal">
-      <div class="sk"><div class="h"><span>drwx</span> llm_genai/</div><div class="items"><span>LangChain</span><span>RAG</span><span>FAISS</span><span>ChromaDB</span><span>Prompt Engineering</span><span>Claude API</span><span>OpenAI API</span></div></div>
-      <div class="sk"><div class="h"><span>drwx</span> machine_learning/</div><div class="items"><span>PyTorch</span><span>scikit-learn</span><span>TensorFlow / Keras</span><span>Hugging Face</span><span>OpenCV</span><span>ONNX</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> llm_genai/</div><div class="items"><span>LangChain</span><span>RAG</span><span>FAISS</span><span>ChromaDB</span><span>Prompt Engineering</span></div></div>
+      <div class="sk"><div class="h"><span>drwx</span> machine_learning/</div><div class="items"><span>PyTorch</span><span>scikit-learn</span><span>TensorFlow / Keras</span><span>Hugging Face</span></div></div>
       <div class="sk"><div class="h"><span>drwx</span> cloud_devops/</div><div class="items"><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Azure</span><span>GitHub Actions</span><span>FastAPI</span></div></div>
       <div class="sk"><div class="h"><span>drwx</span> languages/</div><div class="items"><span>Python</span><span>C++</span><span>SQL</span><span>R</span></div></div>
       <div class="sk"><div class="h"><span>drwx</span> data_viz/</div><div class="items"><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>Jupyter</span></div></div>
@@ -397,10 +402,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     </div>
     <div class="reveal">
       <div class="kicker">// 06 · play</div>
-      <h2>Beat the minimax.</h2>
-      <p class="sub" style="margin-bottom:0">My article, but playable. You're <span class="pr">X</span>, the AI is <span class="pk">O</span> — it searches every possible future and picks the move with the best worst case. Spoiler: the best you can do is a draw.</p>
+      <h2>Beat my AI agent.</h2>
+      <p class="sub" style="margin-bottom:0">A tiny search-based AI agent. You're <span class="pr">X</span>, the AI is <span class="pk">O</span>. Before every move it simulates every possible future of the game and picks the safest path. Spoiler: the best you can do is a draw.</p>
       <div class="gstat" id="gstat">your move.</div>
-      <div class="score"><span>you <b class="pr" id="sx">0</b></span><span>draws <b class="am" id="sd">0</b></span><span>minimax <b class="pk" id="so">0</b></span></div>
+      <div class="score"><span>you <b class="pr" id="sx">0</b></span><span>draws <b class="am" id="sd">0</b></span><span>AI <b class="pk" id="so">0</b></span></div>
       <div class="log" id="glog">positions evaluated: —</div>
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn" id="reset">↻ new game</button>
@@ -429,6 +434,61 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <script>
 const $ = s => document.querySelector(s);
 
+/* ---------- neural-net background ---------- */
+(function(){
+  const cv = document.getElementById('net'), ctx = cv.getContext('2d'), glow = document.getElementById('glow');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, pts = [], mouse = {x:-9999, y:-9999, on:false}, raf;
+  const LINK = 130, MLINK = 190;
+  function size(){
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const n = Math.min(Math.round(W*H/16000), 110);
+    pts = Array.from({length:n}, () => ({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35, r:Math.random()*1.4+.8, hot:Math.random()<.12}));
+  }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    for (const p of pts){
+      if (mouse.on){
+        const dx = p.x-mouse.x, dy = p.y-mouse.y, d2 = dx*dx+dy*dy;
+        if (d2 < 140*140 && d2 > 1){ const f = (1 - Math.sqrt(d2)/140) * .6; p.x += dx/Math.sqrt(d2)*f; p.y += dy/Math.sqrt(d2)*f; }
+      }
+      if (!reduce){ p.x += p.vx; p.y += p.vy; }
+      if (p.x < -20) p.x = W+20; if (p.x > W+20) p.x = -20;
+      if (p.y < -20) p.y = H+20; if (p.y > H+20) p.y = -20;
+    }
+    for (let i=0;i<pts.length;i++){
+      const a = pts[i];
+      for (let j=i+1;j<pts.length;j++){
+        const b = pts[j], dx = a.x-b.x, dy = a.y-b.y, d = dx*dx+dy*dy;
+        if (d < LINK*LINK){ ctx.strokeStyle = `rgba(125,137,150,${(1-Math.sqrt(d)/LINK)*.22})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+      }
+      if (mouse.on){
+        const dx = a.x-mouse.x, dy = a.y-mouse.y, d = Math.sqrt(dx*dx+dy*dy);
+        if (d < MLINK){ ctx.strokeStyle = `rgba(124,255,155,${(1-d/MLINK)*.55})`; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(mouse.x,mouse.y); ctx.stroke(); }
+      }
+    }
+    for (const p of pts){
+      const near = mouse.on && Math.hypot(p.x-mouse.x, p.y-mouse.y) < MLINK;
+      ctx.fillStyle = near ? '#7CFF9B' : p.hot ? 'rgba(255,106,213,.75)' : 'rgba(170,182,195,.55)';
+      ctx.beginPath(); ctx.arc(p.x, p.y, near ? p.r+.8 : p.r, 0, Math.PI*2); ctx.fill();
+    }
+    if (mouse.on){ ctx.fillStyle = '#7CFF9B'; ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 2.4, 0, Math.PI*2); ctx.fill(); }
+    raf = requestAnimationFrame(frame);
+  }
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = true;
+    glow.style.opacity = 1; glow.style.transform = `translate(${e.clientX}px,${e.clientY}px)`;
+  }, {passive:true});
+  document.addEventListener('pointerleave', () => { mouse.on = false; glow.style.opacity = 0; });
+  addEventListener('blur', () => { mouse.on = false; glow.style.opacity = 0; });
+  addEventListener('resize', () => { clearTimeout(size.t); size.t = setTimeout(size, 150); });
+  document.addEventListener('visibilitychange', () => { cancelAnimationFrame(raf); if (!document.hidden) raf = requestAnimationFrame(frame); });
+  size(); frame();
+})();
+
 /* ---------- boot ---------- */
 (function(){
   const boot = $('#boot'), box = $('#bootlines');
@@ -439,7 +499,7 @@ const $ = s => document.querySelector(s);
     ['[ <span class="ok">OK</span> ] mounting /math  (ITU, 2019–2024)', 140],
     ['[ <span class="ok">OK</span> ] importing torch, langchain, fastapi', 160],
     ['[ <span class="ok">OK</span> ] connecting vector store … chromadb ready', 160],
-    ['[ <span class="ok">OK</span> ] running minimax search … opponent contained', 180],
+    ['[ <span class="ok">OK</span> ] loading agent weights … ready to play', 180],
     ['<span class="d">welcome. starting interface…</span>', 300]
   ];
   let i = 0, t;
@@ -475,7 +535,7 @@ const C = {
   <span class="pr">blog</span>       my writing
   <span class="pr">cv</span>         open my CV
   <span class="pr">contact</span>    say hi
-  <span class="pr">play</span>       beat my minimax AI (you can't)
+  <span class="pr">play</span>       beat my AI agent (you can't)
   <span class="pr">sudo hire irmak</span>
   <span class="pr">clear</span>      clean the screen`,
   whoami: () => `<span class="pk">irmak köseoğlu</span> — ML / AI engineer
@@ -488,20 +548,20 @@ builds RAG systems, deep learning models &amp; the pipelines that ship them.`,
 <span class="am">drwxr-xr-x</span>  fake_news_clf/         72k articles · scikit-learn
 <span class="muted">→ scroll to <a href="#projects">#projects</a> for details</span>`,
   ls: () => C.projects(),
-  skills: () => `<span class="pth">llm/genai</span>  langchain rag faiss chromadb claude openai
-<span class="pth">ml</span>         pytorch sklearn tensorflow huggingface opencv onnx
+  skills: () => `<span class="pth">llm/genai</span>  langchain rag faiss chromadb prompt-eng
+<span class="pth">ml</span>         pytorch sklearn tensorflow huggingface
 <span class="pth">devops</span>     docker kubernetes aws azure github-actions
 <span class="pth">langs</span>      python c++ sql r`,
   education: () => `2025–2027  M.Sc. Big Data &amp; AI · SRH Berlin
 2019–2024  B.Sc. Mathematics Engineering · ITU
 2024–2025  Analyst · KPMG Turkey`,
   blog: () => `📝 <a href="https://medium.com/@rmakoseoglu/the-minimax-theorem-optimization-meets-game-theory-4cc2f37e2e00" target="_blank" rel="noopener">The Minimax Theorem: Optimization Meets Game Theory</a>
-<span class="muted">   5 min read · type "play" to try it live</span>`,
+<span class="muted">   5 min read on medium</span>`,
   contact: () => `email     <a href="mailto:irmakkoseoglu01@gmail.com">irmakkoseoglu01@gmail.com</a>
 github    <a href="https://github.com/irmakkoseoglu" target="_blank" rel="noopener">github.com/irmakkoseoglu</a>
 linkedin  <a href="https://linkedin.com/in/irmakkoseoglu" target="_blank" rel="noopener">linkedin.com/in/irmakkoseoglu</a>
 cv        <a href="/cv.pdf" target="_blank" rel="noopener">irmakkoseoglu.com/cv.pdf</a>`,
-  play: () => { setTimeout(()=>$('#play').scrollIntoView({behavior:'smooth'}), 400); return `<span class="pk">launching minimax.exe …</span> good luck. you'll need it.`; },
+  play: () => { setTimeout(()=>$('#play').scrollIntoView({behavior:'smooth'}), 400); return `<span class="pk">launching agent.exe …</span> good luck. you'll need it.`; },
   'sudo hire irmak': () => `<span class="pr">[sudo] password accepted.</span>
 permission granted ✓  opening mail client…
 <span class="muted">(seriously though — irmakkoseoglu01@gmail.com)</span>`,
@@ -577,7 +637,7 @@ $('#mail').addEventListener('click', e => {
     over = true;
     if (w.l) w.l.forEach(i => cells[i].classList.add('win'));
     score[w.p]++; $('#sx').textContent = score.X; $('#so').textContent = score.O; $('#sd').textContent = score.D;
-    st.innerHTML = w.p==='O' ? '<b class="pk">minimax wins.</b> it saw that coming 6 moves ago.' : w.p==='X' ? '<b class="pr">you won?!</b> please email me how. seriously.' : '<b class="am">draw.</b> that\'s the saddle point — the best either of us can do.';
+    st.innerHTML = w.p==='O' ? '<b class="pk">AI wins.</b> it saw that coming moves ago.' : w.p==='X' ? '<b class="pr">you won?!</b> please email me how. seriously.' : '<b class="am">draw.</b> perfect play on both sides. respect.';
     draw();
   }
   function ai(){
@@ -594,10 +654,10 @@ $('#mail').addEventListener('click', e => {
     if (over || b[i]) return;
     b[i] = 'X'; draw();
     const w = winner(b); if (w) return finish(w);
-    st.textContent = 'minimax is thinking…'; cells.forEach(c=>c.disabled=true);
+    st.textContent = 'AI is thinking…'; cells.forEach(c=>c.disabled=true);
     setTimeout(ai, 380);
   }
-  function reset(aiFirst){ b = Array(9).fill(null); over = false; lg.textContent = 'positions evaluated: —'; st.textContent = 'your move.'; draw(); if (aiFirst){ st.textContent='minimax is thinking…'; setTimeout(ai,300);} }
+  function reset(aiFirst){ b = Array(9).fill(null); over = false; lg.textContent = 'positions evaluated: —'; st.textContent = 'your move.'; draw(); if (aiFirst){ st.textContent='AI is thinking…'; setTimeout(ai,300);} }
   $('#reset').onclick = () => reset(false);
   $('#first').onclick = () => reset(true);
   reset(false);
